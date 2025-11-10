@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Finansial - LKPD Interaktif</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2E86AB;
+            --secondary: #A23B72;
+            --accent: #F18F01;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --light: #F7F9FC;
+            --dark: #2B2D42;
+            --gradient: linear-gradient(135deg, #2E86AB 0%, #A23B72 100%);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--gradient);
+            border-radius: 15px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        }
+        
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            position: relative;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .student-info {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 134, 171, 0.2);
+        }
+        
+        .progress-container {
+            margin: 25px 0;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            height: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: var(--light);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gradient);
+        }
+        
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            font-size: 1.6rem;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+        }
+        
+        .question h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .question-number {
+            background: var(--gradient);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f0f7ff;
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .option input {
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .budget-table th, .budget-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .budget-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .budget-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .budget-table input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 8px;
+        }
+        
+        .budget-table input:focus {
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 2px rgba(46, 134, 171, 0.2);
+            border-radius: 5px;
+        }
+        
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .game-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat {
+            background: var(--light);
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .game-choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .choice-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .choice-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .choice-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .simulation-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .simulation-visual {
+            height: 250px;
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bar {
+            width: 15%;
+            background: var(--primary);
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+            position: relative;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .activity-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-submit {
+            background: var(--gradient);
+            color: white;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(46, 134, 171, 0.4);
+        }
+        
+        .btn-reset {
+            background-color: #e0e0e0;
+            color: var(--dark);
+        }
+        
+        .btn-reset:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .btn-download {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background-color: #3d8b40;
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            border-left: 5px solid var(--success);
+            text-align: center;
+        }
+        
+        .result h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin: 15px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .certificate {
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            background: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .certificate h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .decoration {
+            position: absolute;
+            z-index: 0;
+        }
+        
+        .dec-1 {
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(162, 59, 114, 0.1);
+            border-radius: 50%;
+        }
+        
+        .dec-2 {
+            bottom: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(46, 134, 171, 0.1);
+            border-radius: 50%;
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, 15px); }
+            100% { transform: translate(0, -0px); }
+        }
+        
+        .tab-container {
+            margin: 20px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .game-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .game-choices {
+                grid-template-columns: 1fr;
+            }
+            
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decoration dec-1 floating"></div>
+        <div class="decoration dec-2 floating"></div>
+        
+        <div class="header">
+            <h1><i class="fas fa-coins"></i> Petualangan Finansial</h1>
+            <p>LKPD Interaktif Literasi Keuangan dengan Aktivitas Menarik untuk Masa Depan Cerah</p>
+        </div>
+        
+        <div class="student-info">
+            <div class="form-group">
+                <label for="nama"><i class="fas fa-user"></i> Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+            </div>
+            <div class="form-group">
+                <label for="kelas"><i class="fas fa-graduation-cap"></i> Kelas</label>
+                <select id="kelas">
+                    <option value="">Pilih Kelas</option>
+                    <option value="7">Kelas 7</option>
+                    <option value="8">Kelas 8</option>
+                    <option value="9">Kelas 9</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sekolah"><i class="fas fa-school"></i> Sekolah</label>
+                <input type="text" id="sekolah" placeholder="Nama sekolah">
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-text">
+            <span>0% Selesai</span>
+            <span id="completed-count">0/15 Aktivitas</span>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="openTab('tab1')">Konsep Dasar</div>
+                <div class="tab" onclick="openTab('tab2')">Game Finansial</div>
+                <div class="tab" onclick="openTab('tab3')">Anggaran & Simulasi</div>
+                <div class="tab" onclick="openTab('tab4')">Aktivitas Praktis</div>
+                <div class="tab" onclick="openTab('tab5')">Refleksi</div>
+            </div>
+            
+            <!-- TAB 1: KONSEP DASAR -->
+            <div id="tab1" class="tab-content active">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-brain"></i> Bagian 1: Pemahaman Konsep Dasar</h2>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">1</span> Apa yang dimaksud dengan "anggaran" dalam konteks keuangan pribadi?</h3>
+                        <textarea id="q1" rows="3" placeholder="Tuliskan jawabanmu di sini..."></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">2</span> Manakah dari berikut ini yang merupakan contoh kebutuhan primer?</h3>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q2a" name="q2" value="a">
+                                <label for="q2a">Makanan, pakaian, dan tempat tinggal</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2b" name="q2" value="b">
+                                <label for="q2b">Liburan ke luar negeri</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2c" name="q2" value="c">
+                                <label for="q2c">Smartphone terbaru</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2d" name="q2" value="d">
+                                <label for="q2d">Konser musik</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">3</span> Jelaskan perbedaan antara menabung dan berinvestasi!</h3>
+                        <textarea id="q3" rows="3" placeholder="Tuliskan jawabanmu di sini..."></textarea>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <h3>Aktivitas: Cocokkan Konsep</h3>
+                        <p>Seret konsep di sebelah kiri ke definisi yang sesuai di sebelah kanan!</p>
+                        <div id="drag-drop-container" style="margin-top: 15px; min-height: 200px; border: 1px dashed #ccc; border-radius: 8px; padding: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <h4>Konsep</h4>
+                                    <div id="concept-list" class="drag-drop-list">
+                                        <div class="drag-item" draggable="true" data-id="1">Anggaran</div>
+                                        <div class="drag-item" draggable="true" data-id="2">Tabungan</div>
+                                        <div class="drag-item" draggable="true" data-id="3">Investasi</div>
+                                        <div class="drag-item" draggable="true" data-id="4">Kebutuhan</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>Definisi</h4>
+                                    <div id="definition-list" class="drag-drop-list">
+                                        <div class="drop-zone" data-id="3">Menggunakan uang untuk menghasilkan lebih banyak uang</div>
+                                        <div class="drop-zone" data-id="4">Hal-hal yang harus dipenuhi untuk bertahan hidup</div>
+                                        <div class="drop-zone" data-id="1">Rencana penggunaan uang dalam periode tertentu</div>
+                                        <div class="drop-zone" data-id="2">Menyimpan uang untuk digunakan di masa depan</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB 2: GAME FINANSIAL -->
+            <div id="tab2" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-gamepad"></i> Bagian 2: Game Keputusan Finansial</h2>
+                    
+                    <div class="game-container">
+                        <div class="game-header">
+                            <h3>Simulasi Pengambilan Keputusan</h3>
+                            <div class="game-stats">
+                                <div class="stat">
+                                    <div class="stat-value" id="game-money">Rp 500.000</div>
+                                    <div class="stat-label">Uang Saku</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value" id="game-savings">Rp 0</div>
+                                    <div class="stat-label">Tabungan</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value" id="game-score">0</div>
+                                    <div class="stat-label">Poin Kebijakan</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p>Kamu memiliki uang saku Rp 500.000. Pilih keputusan finansial yang paling bijak dalam situasi berikut:</p>
+                        
+                        <div class="question">
+                            <h3><span class="question-number">4</span> Kamu ingin membeli sepatu baru. Manakah pilihan terbaik?</h3>
+                            <div class="game-choices">
+                                <div class="choice-card" onclick="selectChoice(4, 'a')">
+                                    <div class="choice-icon"><i class="fas fa-shopping-cart"></i></div>
+                                    <h4>Beli sepatu branded terbaru (Rp 450.000)</h4>
+                                    <p>Habiskan hampir semua uang saku</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(4, 'b')">
+                                    <div class="choice-icon"><i class="fas fa-piggy-bank"></i></div>
+                                    <h4>Beli sepatu berkualitas cukup (Rp 200.000)</h4>
+                                    <p>Sisihkan sisanya untuk tabungan</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(4, 'c')">
+                                    <div class="choice-icon"><i class="fas fa-tshirt"></i></div>
+                                    <h4>Tidak beli, pakai sepatu lama saja</h4>
+                                    <p>Simpan semua uang untuk kebutuhan lain</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <h3><span class="question-number">5</span> Teman mengajak jalan-jalan ke mall di akhir pekan. Apa yang akan kamu lakukan?</h3>
+                            <div class="game-choices">
+                                <div class="choice-card" onclick="selectChoice(5, 'a')">
+                                    <div class="choice-icon"><i class="fas fa-film"></i></div>
+                                    <h4>Ikut dan habiskan Rp 150.000</h4>
+                                    <p>Untuk tiket bioskop dan makanan</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(5, 'b')">
+                                    <div class="choice-icon"><i class="fas fa-utensils"></i></div>
+                                    <h4>Ikut tapi bawa bekal dari rumah</h4>
+                                    <p>Hanya bayar tiket bioskop (Rp 50.000)</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(5, 'c')">
+                                    <div class="choice-icon"><i class="fas fa-book"></i></div>
+                                    <h4>Tolak ajakan, belajar di rumah</h4>
+                                    <p>Simpan uang untuk kebutuhan penting</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <h3><span class="question-number">6</span> Kamu mendapat hadiah uang Rp 200.000 dari nenek. Apa yang akan kamu lakukan?</h3>
+                            <div class="game-choices">
+                                <div class="choice-card" onclick="selectChoice(6, 'a')">
+                                    <div class="choice-icon"><i class="fas fa-gamepad"></i></div>
+                                    <h4>Beli game baru (Rp 200.000)</h4>
+                                    <p>Gunakan semua untuk kesenangan</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(6, 'b')">
+                                    <div class="choice-icon"><i class="fas fa-balance-scale"></i></div>
+                                    <h4>Bagi dua: tabung 50%, beli buku 50%</h4>
+                                    <p>Seimbangkan antara menabung dan kebutuhan</p>
+                                </div>
+                                <div class="choice-card" onclick="selectChoice(6, 'c')">
+                                    <div class="choice-icon"><i class="fas fa-piggy-bank"></i></div>
+                                    <h4>Tabung semua untuk masa depan</h4>
+                                    <p>Prioritaskan tabungan jangka panjang</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB 3: ANGGARAN & SIMULASI -->
+            <div id="tab3" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-chart-pie"></i> Bagian 3: Aplikasi Praktis - Membuat Anggaran</h2>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">7</span> Bayangkan kamu mendapatkan uang saku sebesar Rp 500.000 per minggu. Buatlah anggaran untuk satu minggu dengan mengisi tabel berikut:</h3>
+                        
+                        <table class="budget-table">
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Rencana Pengeluaran</th>
+                                    <th>Jumlah (Rp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Makan dan Minum</td>
+                                    <td><input type="text" id="cat1_desc" placeholder="Contoh: Makan siang di sekolah"></td>
+                                    <td><input type="number" id="cat1_amount" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Transportasi</td>
+                                    <td><input type="text" id="cat2_desc" placeholder="Contoh: Ongkos ke sekolah"></td>
+                                    <td><input type="number" id="cat2_amount" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tabungan</td>
+                                    <td><input type="text" id="cat3_desc" placeholder="Contoh: Tabungan pendidikan"></td>
+                                    <td><input type="number" id="cat3_amount" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Hiburan</td>
+                                    <td><input type="text" id="cat4_desc" placeholder="Contoh: Nonton film"></td>
+                                    <td><input type="number" id="cat4_amount" placeholder="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Lain-lain</td>
+                                    <td><input type="text" id="cat5_desc" placeholder="Contoh: Buku pelajaran"></td>
+                                    <td><input type="number" id="cat5_amount" placeholder="0"></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" style="text-align: right; font-weight: bold;">Total:</td>
+                                    <td id="total_amount">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div class="simulation-container">
+                        <h3>Visualisasi Anggaran</h3>
+                        <p>Lihat bagaimana anggaranmu terdistribusi:</p>
+                        
+                        <div class="simulation-visual">
+                            <div class="bar" id="bar1" style="height: 0%;">
+                                <div class="bar-label">Makan</div>
+                            </div>
+                            <div class="bar" id="bar2" style="height: 0%;">
+                                <div class="bar-label">Transport</div>
+                            </div>
+                            <div class="bar" id="bar3" style="height: 0%;">
+                                <div class="bar-label">Tabungan</div>
+                            </div>
+                            <div class="bar" id="bar4" style="height: 0%;">
+                                <div class="bar-label">Hiburan</div>
+                            </div>
+                            <div class="bar" id="bar5" style="height: 0%;">
+                                <div class="bar-label">Lainnya</div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="updateVisualization()" style="background: var(--accent); color: white; width: 100%;">
+                            <i class="fas fa-chart-bar"></i> Perbarui Visualisasi
+                        </button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Grafik Anggaran</h3>
+                        <canvas id="budgetChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">8</span> Berdasarkan anggaran yang telah kamu buat, apakah total pengeluaranmu melebihi uang saku? Jika ya, apa yang akan kamu lakukan?</h3>
+                        <textarea id="q8" rows="3" placeholder="Tuliskan jawabanmu di sini..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB 4: AKTIVITAS PRAKTIS -->
+            <div id="tab4" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-tasks"></i> Bagian 4: Aktivitas Praktis</h2>
+                    
+                    <div class="activity-grid">
+                        <div class="activity-card">
+                            <div class="activity-icon"><i class="fas fa-receipt"></i></div>
+                            <h3>Analisis Pengeluaran</h3>
+                            <p>Catat pengeluaranmu selama 3 hari terakhir dan analisis apakah sesuai dengan kebutuhan atau keinginan.</p>
+                            <textarea id="activity1" rows="4" placeholder="Tuliskan analisismu di sini..." style="width: 100%; margin-top: 10px;"></textarea>
+                        </div>
+                        
+                        <div class="activity-card">
+                            <div class="activity-icon"><i class="fas fa-bullseye"></i></div>
+                            <h3>Target Tabungan</h3>
+                            <p>Tentukan target tabungan untuk 1 bulan ke depan dan rencana mencapainya.</p>
+                            <textarea id="activity2" rows="4" placeholder="Tuliskan target dan rencanamu di sini..." style="width: 100%; margin-top: 10px;"></textarea>
+                        </div>
+                        
+                        <div class="activity-card">
+                            <div class="activity-icon"><i class="fas fa-lightbulb"></i></div>
+                            <h3>Ide Penghasilan</h3>
+                            <p>Bagaimana kamu bisa menghasilkan uang tambahan dengan keterampilan yang kamu miliki?</p>
+                            <textarea id="activity3" rows="4" placeholder="Tuliskan idemu di sini..." style="width: 100%; margin-top: 10px;"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">9</span> Buatlah daftar 5 prioritas keuangan pribadimu untuk 6 bulan ke depan!</h3>
+                        <textarea id="q9" rows="4" placeholder="Tuliskan prioritas keuanganmu di sini..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB 5: REFLEKSI -->
+            <div id="tab5" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-lightbulb"></i> Bagian 5: Refleksi Diri</h2>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">10</span> Bagaimana kebiasaan mengelola uang saku yang selama ini kamu lakukan? Apakah sudah baik atau masih perlu perbaikan?</h3>
+                        <textarea id="q10" rows="3" placeholder="Tuliskan refleksimu di sini..."></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">11</span> Setelah mempelajari literasi finansial, apa perubahan yang akan kamu terapkan dalam mengelola keuangan pribadimu?</h3>
+                        <textarea id="q11" rows="3" placeholder="Tuliskan rencanamu di sini..."></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <h3><span class="question-number">12</span> Menurutmu, mengapa penting bagi siswa seperti kamu untuk memahami literasi finansial sejak dini?</h3>
+                        <textarea id="q12" rows="3" placeholder="Tuliskan pendapatmu di sini..."></textarea>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-icon"><i class="fas fa-star"></i></div>
+                        <h3>Komitmen Finansial</h3>
+                        <p>Tuliskan komitmen pribadimu untuk menjadi lebih bijak dalam mengelola keuangan!</p>
+                        <textarea id="activity4" rows="4" placeholder="Tuliskan komitmenmu di sini..." style="width: 100%; margin-top: 10px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button type="button" class="btn-reset" onclick="resetForm()">
+                <i class="fas fa-redo"></i> Reset Semua
+            </button>
+            <button type="button" class="btn-download" onclick="downloadResults()">
+                <i class="fas fa-download"></i> Download Hasil
+            </button>
+            <button type="button" class="btn-submit" onclick="submitForm()">
+                <i class="fas fa-paper-plane"></i> Kirim ke Guru
+            </button>
+        </div>
+        
+        <div class="result" id="result">
+            <h2><i class="fas fa-trophy"></i> Tugas Berhasil Dikirim!</h2>
+            <div class="badge" id="achievement-badge">Juara Finansial Muda</div>
+            <p>Selamat <span id="result_nama"></span> dari <span id="result_kelas"></span> telah menyelesaikan Petualangan Finansial!</p>
+            
+            <div class="certificate">
+                <h3>SERTIFIKAT PENYELESAIAN</h3>
+                <p>Diberikan kepada:</p>
+                <h2 id="certificate_name"></h2>
+                <p>Atas partisipasi aktif dalam menyelesaikan LKPD Literasi Finansial dan menunjukkan pemahaman yang baik tentang pengelolaan keuangan pribadi.</p>
+                <p>Skor Kebijakan Finansial: <span id="certificate_score"></span> poin</p>
+                <p>Tanggal: <span id="certificate_date"></span></p>
+            </div>
+            
+            <p>Hasil tugasmu telah dikirim ke email guru dan tersimpan di browser.</p>
+            <button onclick="printCertificate()" style="background: var(--success); color: white; margin-top: 15px;">
+                <i class="fas fa-print"></i> Cetak Sertifikat
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Variabel game
+        let gameMoney = 500000;
+        let gameSavings = 0;
+        let gameScore = 0;
+        let selectedChoices = {};
+        let budgetChart = null;
+        
+        // Menghitung total anggaran secara real-time
+        const amountInputs = document.querySelectorAll('input[type="number"]');
+        amountInputs.forEach(input => {
+            input.addEventListener('input', calculateTotal);
+        });
+        
+        // Setup drag and drop
+        function setupDragDrop() {
+            const dragItems = document.querySelectorAll('.drag-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('drop', drop);
+            });
+        }
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+        }
+        
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.querySelector(`.drag-item[data-id="${id}"]`);
+            
+            if (e.target.classList.contains('drop-zone') && e.target.dataset.id === id) {
+                e.target.style.backgroundColor = '#e8f5e9';
+                e.target.innerHTML = draggedElement.textContent + ' <i class="fas fa-check" style="color: green; margin-left: 10px;"></i>';
+                updateProgress();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const totalActivities = 15;
+            let completed = 0;
+            
+            // Periksa jawaban teks (q1 sampai q12)
+            for (let i = 1; i <= 12; i++) {
+                const answer = document.getElementById(`q${i}`) ? document.getElementById(`q${i}`).value : '';
+                if (answer.trim() !== '') completed++;
+            }
+            
+            // Periksa pilihan game
+            if (selectedChoices[4]) completed++;
+            if (selectedChoices[5]) completed++;
+            if (selectedChoices[6]) completed++;
+            
+            // Periksa aktivitas
+            for (let i = 1; i <= 4; i++) {
+                const activity = document.getElementById(`activity${i}`) ? document.getElementById(`activity${i}`).value : '';
+                if (activity.trim() !== '') completed++;
+            }
+            
+            // Periksa anggaran
+            const totalBudget = document.getElementById('total_amount').textContent;
+            if (parseInt(totalBudget) > 0) completed++;
+            
+            // Periksa drag and drop (sederhana - asumsi selesai jika ada yang di-drop)
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let dragCompleted = 0;
+            dropZones.forEach(zone => {
+                if (zone.innerHTML.includes('fa-check')) dragCompleted++;
+            });
+            if (dragCompleted >= 2) completed++;
+            
+            const progress = (completed / totalActivities) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').innerHTML = `<span>${Math.round(progress)}% Selesai</span><span id="completed-count">${completed}/${totalActivities} Aktivitas</span>`;
+            
+            // Update badge berdasarkan progress
+            updateBadge(progress);
+        }
+        
+        function updateBadge(progress) {
+            const badge = document.getElementById('achievement-badge');
+            if (progress >= 90) {
+                badge.textContent = "Master Finansial";
+                badge.style.background = "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)";
+            } else if (progress >= 70) {
+                badge.textContent = "Ahli Finansial";
+                badge.style.background = "linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%)";
+            } else if (progress >= 50) {
+                badge.textContent = "Pemula Finansial";
+                badge.style.background = "linear-gradient(135deg, #CD7F32 0%, #8B4513 100%)";
+            } else {
+                badge.textContent = "Peserta Finansial";
+            }
+        }
+        
+        // Tambahkan event listener untuk update progress
+        document.querySelectorAll('input, textarea').forEach(element => {
+            element.addEventListener('input', updateProgress);
+        });
+        
+        // Setup tabs
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        function calculateTotal() {
+            let total = 0;
+            amountInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+            document.getElementById('total_amount').textContent = total;
+            
+            // Beri warna jika melebihi 500000
+            if (total > 500000) {
+                document.getElementById('total_amount').style.color = 'red';
+                document.getElementById('total_amount').style.fontWeight = 'bold';
+            } else {
+                document.getElementById('total_amount').style.color = 'inherit';
+                document.getElementById('total_amount').style.fontWeight = 'normal';
+            }
+            
+            updateProgress();
+        }
+        
+        function selectChoice(question, choice) {
+            selectedChoices[question] = choice;
+            
+            // Update game stats berdasarkan pilihan
+            if (question === 4) {
+                if (choice === 'a') {
+                    gameMoney -= 450000;
+                    gameScore += 10; // Skor rendah untuk pilihan tidak bijak
+                } else if (choice === 'b') {
+                    gameMoney -= 200000;
+                    gameSavings += 250000;
+                    gameScore += 80; // Skor tinggi untuk pilihan bijak
+                } else if (choice === 'c') {
+                    gameSavings += 500000;
+                    gameScore += 60; // Skor sedang untuk pilihan hemat
+                }
+            } else if (question === 5) {
+                if (choice === 'a') {
+                    gameMoney -= 150000;
+                    gameScore += 20; // Skor rendah untuk pilihan tidak bijak
+                } else if (choice === 'b') {
+                    gameMoney -= 50000;
+                    gameScore += 70; // Skor tinggi untuk pilihan bijak
+                } else if (choice === 'c') {
+                    gameScore += 50; // Skor sedang untuk pilihan hemat
+                }
+            } else if (question === 6) {
+                if (choice === 'a') {
+                    gameScore += 10; // Skor rendah untuk pilihan tidak bijak
+                } else if (choice === 'b') {
+                    gameSavings += 100000;
+                    gameScore += 80; // Skor tinggi untuk pilihan bijak
+                } else if (choice === 'c') {
+                    gameSavings += 200000;
+                    gameScore += 70; // Skor tinggi untuk pilihan hemat
+                }
+            }
+            
+            // Update tampilan game
+            document.getElementById('game-money').textContent = `Rp ${gameMoney.toLocaleString()}`;
+            document.getElementById('game-savings').textContent = `Rp ${gameSavings.toLocaleString()}`;
+            document.getElementById('game-score').textContent = gameScore;
+            
+            // Highlight pilihan yang dipilih
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.style.borderColor = '#e0e0e0';
+                card.style.transform = 'translateY(0)';
+            });
+            
+            event.currentTarget.style.borderColor = 'var(--primary)';
+            event.currentTarget.style.transform = 'translateY(-5px)';
+            
+            updateProgress();
+        }
+        
+        function updateVisualization() {
+            const amounts = [
+                parseInt(document.getElementById('cat1_amount').value) || 0,
+                parseInt(document.getElementById('cat2_amount').value) || 0,
+                parseInt(document.getElementById('cat3_amount').value) || 0,
+                parseInt(document.getElementById('cat4_amount').value) || 0,
+                parseInt(document.getElementById('cat5_amount').value) || 0
+            ];
+            
+            const labels = ['Makan & Minum', 'Transportasi', 'Tabungan', 'Hiburan', 'Lain-lain'];
+            const total = amounts.reduce((a, b) => a + b, 0);
+            const maxHeight = Math.max(...amounts);
+            
+            for (let i = 0; i < 5; i++) {
+                const height = total > 0 ? (amounts[i] / maxHeight) * 80 + 20 : 0;
+                document.getElementById(`bar${i+1}`).style.height = `${height}%`;
+            }
+            
+            // Update chart
+            updateChart(labels, amounts);
+        }
+        
+        function updateChart(labels, data) {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            if (budgetChart) {
+                budgetChart.destroy();
+            }
+            
+            budgetChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            '#2E86AB',
+                            '#A23B72',
+                            '#F18F01',
+                            '#4CAF50',
+                            '#9C27B0'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribusi Anggaran'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function submitForm() {
+            const nama = document.getElementById('nama').value;
+            const kelas = document.getElementById('kelas').value;
+            const sekolah = document.getElementById('sekolah').value;
+            
+            // Validasi form
+            if (!nama || !kelas || !sekolah) {
+                alert('Harap isi nama, kelas, dan sekolah terlebih dahulu!');
+                return;
+            }
+            
+            // Kumpulkan semua jawaban
+            const answers = {
+                nama: nama,
+                kelas: kelas,
+                sekolah: sekolah,
+                timestamp: new Date().toLocaleString(),
+                q1: document.getElementById('q1').value,
+                q2: document.querySelector('input[name="q2"]:checked') ? document.querySelector('input[name="q2"]:checked').value : '',
+                q3: document.getElementById('q3').value,
+                game: {
+                    q4: selectedChoices[4] || '',
+                    q5: selectedChoices[5] || '',
+                    q6: selectedChoices[6] || '',
+                    score: gameScore,
+                    money: gameMoney,
+                    savings: gameSavings
+                },
+                budget: {
+                    cat1: {
+                        desc: document.getElementById('cat1_desc').value,
+                        amount: document.getElementById('cat1_amount').value
+                    },
+                    cat2: {
+                        desc: document.getElementById('cat2_desc').value,
+                        amount: document.getElementById('cat2_amount').value
+                    },
+                    cat3: {
+                        desc: document.getElementById('cat3_desc').value,
+                        amount: document.getElementById('cat3_amount').value
+                    },
+                    cat4: {
+                        desc: document.getElementById('cat4_desc').value,
+                        amount: document.getElementById('cat4_amount').value
+                    },
+                    cat5: {
+                        desc: document.getElementById('cat5_desc').value,
+                        amount: document.getElementById('cat5_amount').value
+                    },
+                    total: document.getElementById('total_amount').textContent
+                },
+                q8: document.getElementById('q8').value,
+                q9: document.getElementById('q9').value,
+                q10: document.getElementById('q10').value,
+                q11: document.getElementById('q11').value,
+                q12: document.getElementById('q12').value,
+                activities: {
+                    activity1: document.getElementById('activity1').value,
+                    activity2: document.getElementById('activity2').value,
+                    activity3: document.getElementById('activity3').value,
+                    activity4: document.getElementById('activity4').value
+                }
+            };
+            
+            // Simpan di localStorage
+            localStorage.setItem(`LKPD_Finansial_${nama}_${kelas}`, JSON.stringify(answers));
+            
+            // Tampilkan hasil
+            document.getElementById('result_nama').textContent = nama;
+            document.getElementById('result_kelas').textContent = `Kelas ${kelas}`;
+            document.getElementById('certificate_name').textContent = nama;
+            document.getElementById('certificate_score').textContent = gameScore;
+            document.getElementById('certificate_date').textContent = new Date().toLocaleDateString('id-ID');
+            document.getElementById('result').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            
+            // Kirim via email
+            sendEmail(answers);
+        }
+        
+        function sendEmail(answers) {
+            // Format data untuk email
+            const subject = `LKPD Literasi Finansial - ${answers.nama} - Kelas ${answers.kelas}`;
+            
+            let body = `HASIL LKPD LITERASI FINANSIAL - PETUALANGAN FINANSIAL\n`;
+            body += `=============================================\n\n`;
+            body += `DATA SISWA:\n`;
+            body += `Nama: ${answers.nama}\n`;
+            body += `Kelas: ${answers.kelas}\n`;
+            body += `Sekolah: ${answers.sekolah}\n`;
+            body += `Tanggal Pengumpulan: ${answers.timestamp}\n`;
+            body += `Skor Kebijakan Finansial: ${answers.game.score}\n\n`;
+            
+            body += `BAGIAN 1: PEMAHAMAN KONSEP DASAR\n`;
+            body += `1. ${answers.q1}\n\n`;
+            body += `2. ${answers.q2}\n\n`;
+            body += `3. ${answers.q3}\n\n`;
+            
+            body += `BAGIAN 2: GAME KEPUTUSAN FINANSIAL\n`;
+            body += `4. ${answers.game.q4}\n`;
+            body += `5. ${answers.game.q5}\n`;
+            body += `6. ${answers.game.q6}\n\n`;
+            
+            body += `BAGIAN 3: APLIKASI PRAKTIS - ANGGARAN\n`;
+            body += `Anggaran Mingguan:\n`;
+            body += `- Makan dan Minum: ${answers.budget.cat1.desc} - Rp ${answers.budget.cat1.amount}\n`;
+            body += `- Transportasi: ${answers.budget.cat2.desc} - Rp ${answers.budget.cat2.amount}\n`;
+            body += `- Tabungan: ${answers.budget.cat3.desc} - Rp ${answers.budget.cat3.amount}\n`;
+            body += `- Hiburan: ${answers.budget.cat4.desc} - Rp ${answers.budget.cat4.amount}\n`;
+            body += `- Lain-lain: ${answers.budget.cat5.desc} - Rp ${answers.budget.cat5.amount}\n`;
+            body += `Total: Rp ${answers.budget.total}\n\n`;
+            body += `8. ${answers.q8}\n\n`;
+            
+            body += `BAGIAN 4: AKTIVITAS PRAKTIS\n`;
+            body += `9. ${answers.q9}\n\n`;
+            body += `Analisis Pengeluaran: ${answers.activities.activity1}\n\n`;
+            body += `Target Tabungan: ${answers.activities.activity2}\n\n`;
+            body += `Ide Penghasilan: ${answers.activities.activity3}\n\n`;
+            
+            body += `BAGIAN 5: REFLEKSI DIRI\n`;
+            body += `10. ${answers.q10}\n\n`;
+            body += `11. ${answers.q11}\n\n`;
+            body += `12. ${answers.q12}\n\n`;
+            body += `Komitmen Finansial: ${answers.activities.activity4}\n`;
+            
+            // Simulasi pengiriman email
+            const emailLink = `mailto:jefriando.sinabang@taruna-bangsa.sch.id?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = emailLink;
+        }
+        
+        function downloadResults() {
+            const nama = document.getElementById('nama').value || 'Siswa';
+            const kelas = document.getElementById('kelas').value || 'Kelas';
+            
+            const answers = {
+                nama: nama,
+                kelas: kelas,
+                timestamp: new Date().toLocaleString(),
+                // ... (kumpulkan semua jawaban seperti di submitForm)
+            };
+            
+            const content = JSON.stringify(answers, null, 2);
+            downloadAsFile(`LKPD_Finansial_${nama}_${kelas}`, content);
+        }
+        
+        function downloadAsFile(filename, content) {
+            const element = document.createElement('a');
+            const file = new Blob([content], {type: 'text/plain'});
+            element.href = URL.createObjectURL(file);
+            element.download = `${filename}.txt`;
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+        
+        function printCertificate() {
+            const certificate = document.querySelector('.certificate');
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Sertifikat Literasi Finansial</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+                        .certificate { border: 3px solid #2E86AB; padding: 40px; margin: 0 auto; max-width: 600px; }
+                        h2 { color: #2E86AB; font-size: 28px; }
+                        h3 { color: #A23B72; font-size: 22px; }
+                        p { font-size: 16px; line-height: 1.6; }
+                    </style>
+                </head>
+                <body>
+                    ${certificate.outerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        function resetForm() {
+            if (confirm('Apakah Anda yakin ingin mengosongkan semua jawaban?')) {
+                document.querySelectorAll('input, textarea, select').forEach(element => {
+                    if (element.type !== 'button') {
+                        element.value = '';
+                    }
+                });
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                document.getElementById('total_amount').textContent = '0';
+                document.getElementById('result').style.display = 'none';
+                
+                // Reset game
+                gameMoney = 500000;
+                gameSavings = 0;
+                gameScore = 0;
+                selectedChoices = {};
+                document.getElementById('game-money').textContent = `Rp ${gameMoney.toLocaleString()}`;
+                document.getElementById('game-savings').textContent = `Rp ${gameSavings.toLocaleString()}`;
+                document.getElementById('game-score').textContent = gameScore;
+                
+                // Reset visualisasi
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById(`bar${i}`).style.height = '0%';
+                }
+                
+                // Reset drag and drop
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.style.backgroundColor = '';
+                    zone.innerHTML = zone.dataset.original || zone.innerHTML;
+                });
+                
+                // Reset chart
+                if (budgetChart) {
+                    budgetChart.destroy();
+                    budgetChart = null;
+                }
+                
+                // Reset progress
+                updateProgress();
+            }
+        }
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            setupDragDrop();
+            updateProgress();
+            
+            // Simpan konten asli drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.dataset.original = zone.innerHTML;
+            });
+        });
+    </script>
+</body>
+</html>
